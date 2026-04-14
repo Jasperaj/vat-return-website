@@ -54,15 +54,43 @@ export const translations = {
     unsupportedType: "Unsupported file type.",
     invalidForm: "The uploaded document does not appear to be a valid VAT return form.",
     taxableImport: "Taxable Import",
+    instructions: "Instructions",
+    userGuide: {
+      title: "User Guide",
+      overview: {
+        title: "1. Overview",
+        text: "The VAT Return Tracker uses Gemini AI to automatically extract data from your VAT return images or PDFs. It organizes this data by PAN number and allows you to export a professionally formatted Excel report."
+      },
+      gettingStarted: {
+        title: "2. Getting Started",
+        language: "Language Selection: At the top right, switch between English and Nepali.",
+        upload: {
+          title: "Uploading VAT Returns:",
+          step1: "Locate the Upload Area: Use the dashed box at the top of the dashboard.",
+          step2: "Select Files: Click 'Select Files' or drag and drop your VAT return forms (Images or PDFs).",
+          step3: "Limit: You can upload up to 12 files at once.",
+          step4: "Processing: The AI will automatically extract data. Watch the progress bar for status."
+        }
+      },
+      managingData: {
+        title: "3. Managing Data",
+        stats: "Stats: Dashboard cards update automatically with total sales, VAT, and net payable.",
+        history: "History: Records are grouped by PAN. Use the Eye (👁️) icon for details or Trash (🗑️) to delete."
+      },
+      exporting: {
+        title: "4. Exporting to Excel",
+        text: "Click 'Export to Excel' to generate a report with formatted headers, consolidated tables, and automatic totals using formulas."
+      }
+    }
   },
   ne: {
     title: "भ्याट रिटर्न सारांश ड्यासबोर्ड",
     subtitle: "स्वचालित भ्याट रिटर्न ट्र्याकिङ र विश्लेषण",
-    exportCsv: "CSV निर्यात गर्नुहोस्",
+    exportCsv: "Excel निर्यात गर्नुहोस्",
     addReturns: "रिटर्न थप्नुहोस्",
     hideUpload: "अपलोड लुकाउनुहोस्",
     howToUse: "कसरी प्रयोग गर्ने",
-    howToUseText: "तपाईंको भ्याट रिटर्न फारमहरू (PDF वा छवि) तलको खण्ड प्रयोग गरेर अपलोड गर्नुहोस्। तपाईं एकै पटक १२ वटा फाइलहरू अपलोड गर्न सक्नुहुन्छ। प्रणालीले स्वचालित रूपमा कर योग्य बिक्री, खरिद, आयात, र भ्याट विवरणहरू निकाल्नेछ। इतिहास तालिकामा निकालिएको डाटा प्रमाणित गर्नुहोस् र आफ्नो सारांश CSV फाइलको रूपमा निर्यात गर्नुहोस्।",
+    howToUseText: "तपाईंको भ्याट रिटर्न फारमहरू (PDF वा छवि) तलको खण्ड प्रयोग गरेर अपलोड गर्नुहोस्। तपाईं एकै पटक १२ वटा फाइलहरू अपलोड गर्न सक्नुहुन्छ। प्रणालीले स्वचालित रूपमा कर योग्य बिक्री, खरिद, आयात, र भ्याट विवरणहरू निकाल्नेछ। इतिहास तालिकामा निकालिएको डाटा प्रमाणित गर्नुहोस् र आफ्नो सारांश Excel फाइलको रूपमा निर्यात गर्नुहोस्।",
     totalSales: "कुल बिक्री",
     totalVat: "कुल भ्याट",
     totalPurchase: "कुल खरिद",
@@ -108,5 +136,33 @@ export const translations = {
     unsupportedType: "असमर्थित फाइल प्रकार।",
     invalidForm: "अपलोड गरिएको कागजात मान्य भ्याट रिटर्न फारम जस्तो देखिँदैन।",
     taxableImport: "कर योग्य आयात",
+    instructions: "निर्देशनहरू",
+    userGuide: {
+      title: "प्रयोगकर्ता निर्देशिका",
+      overview: {
+        title: "१. अवलोकन",
+        text: "भ्याट रिटर्न ट्र्याकरले तपाईंको भ्याट रिटर्न छविहरू वा PDF बाट स्वचालित रूपमा डाटा निकाल्न Gemini AI प्रयोग गर्दछ। यसले यो डाटालाई PAN नम्बर अनुसार व्यवस्थित गर्दछ र तपाईंलाई व्यावसायिक रूपमा ढाँचा गरिएको Excel रिपोर्ट निर्यात गर्न अनुमति दिन्छ।"
+      },
+      gettingStarted: {
+        title: "२. सुरु गर्दै",
+        language: "भाषा चयन: माथिल्लो दायाँमा, अंग्रेजी र नेपाली बीच स्विच गर्नुहोस्।",
+        upload: {
+          title: "भ्याट रिटर्न अपलोड गर्दै:",
+          step1: "अपलोड क्षेत्र पत्ता लगाउनुहोस्: ड्यासबोर्डको शीर्षमा रहेको ड्यास गरिएको बक्स प्रयोग गर्नुहोस्।",
+          step2: "फाइलहरू चयन गर्नुहोस्: 'फाइलहरू चयन गर्नुहोस्' मा क्लिक गर्नुहोस् वा आफ्नो भ्याट रिटर्न फारमहरू (छवि वा PDF) ड्र्याग एण्ड ड्रप गर्नुहोस्।",
+          step3: "सीमा: तपाईं एकै पटक १२ वटा फाइलहरू सम्म अपलोड गर्न सक्नुहुन्छ।",
+          step4: "प्रशोधन: AI ले स्वचालित रूपमा डाटा निकाल्नेछ। स्थितिको लागि प्रगति पट्टी हेर्नुहोस्।"
+        }
+      },
+      managingData: {
+        title: "३. डाटा व्यवस्थापन",
+        stats: "तथ्याङ्क: ड्यासबोर्ड कार्डहरू कुल बिक्री, भ्याट, र खुद तिर्नुपर्ने रकमको साथ स्वचालित रूपमा अपडेट हुन्छन्।",
+        history: "इतिहास: रेकर्डहरू PAN द्वारा समूहबद्ध छन्। विवरणका लागि आँखा (👁️) आइकन वा मेटाउनका लागि रद्दीटोकरी (🗑️) प्रयोग गर्नुहोस्।"
+      },
+      exporting: {
+        title: "४. Excel मा निर्यात गर्दै",
+        text: "ढाँचा गरिएका हेडरहरू, एकीकृत तालिकाहरू, र सूत्रहरू प्रयोग गरेर स्वचालित योगफलहरू सहितको रिपोर्ट उत्पन्न गर्न 'Excel मा निर्यात गर्नुहोस्' मा क्लिक गर्नुहोस्।"
+      }
+    }
   },
 };

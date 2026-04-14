@@ -5,58 +5,81 @@ import { Card, CardContent } from "@/components/ui/card";
 import { parseVatReturn } from "@/lib/gemini";
 import { VatReturn } from "@/types";
 import { toast } from "sonner";
+import { translations, Language } from "@/lib/translations";
+import { motion } from "motion/react";
 
 interface FileUploadProps {
   onUploadSuccess: (data: VatReturn[]) => void;
+  lang: Language;
 }
 
-export function FileUpload({ onUploadSuccess }: FileUploadProps) {
+export function FileUpload({ onUploadSuccess, lang }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const t = translations[lang];
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []) as File[];
     if (files.length === 0) return;
 
     if (files.length > 12) {
-      toast.error("You can only upload up to 12 files at a time.");
+      toast.error(lang === "en" ? "You can only upload up to 12 files at a time." : "तपाईं एक पटकमा १२ वटा फाइलहरू मात्र अपलोड गर्न सक्नुहुन्छ।");
       return;
     }
 
     setIsUploading(true);
+    setProgress(0);
     const processedReturns: VatReturn[] = [];
+    const errors: string[] = [];
 
     try {
-      for (const file of files as File[]) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
         if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
-          toast.warning(`Skipping ${file.name}: Unsupported file type.`);
+          errors.push(`${file.name}: ${t.unsupportedType}`);
           continue;
         }
 
-        const base64Data = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve((reader.result as string).split(",")[1]);
-          reader.onerror = reject;
-          reader.readAsDataURL(file as Blob);
-        });
+        try {
+          const base64Data = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve((reader.result as string).split(",")[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
 
-        const parsedData = await parseVatReturn(base64Data, file.type);
+          const parsedData = await parseVatReturn(base64Data, file.type);
+          
+          processedReturns.push({
+            ...parsedData,
+            id: crypto.randomUUID(),
+            filename: file.name,
+            dateAdded: new Date().toLocaleString(),
+          });
+        } catch (err) {
+          console.error(`Error processing ${file.name}:`, err);
+          errors.push(`${file.name}: ${err instanceof Error ? err.message : "Unknown error"}`);
+        }
         
-        processedReturns.push({
-          ...parsedData,
-          id: crypto.randomUUID(),
-          filename: file.name,
-          dateAdded: new Date().toLocaleString(),
-        });
+        setProgress(Math.round(((i + 1) / files.length) * 100));
       }
 
-      onUploadSuccess(processedReturns);
-      toast.success(`${processedReturns.length} VAT returns processed successfully!`);
+      if (processedReturns.length > 0) {
+        onUploadSuccess(processedReturns);
+        toast.success(t.success);
+      }
+
+      if (errors.length > 0) {
+        errors.forEach(err => toast.error(err, { duration: 5000 }));
+      }
     } catch (error) {
-      console.error("Error processing files:", error);
-      toast.error("Failed to process some VAT returns. Please try again.");
+      console.error("Critical error processing files:", error);
+      toast.error(t.errorProcessing);
     } finally {
       setIsUploading(false);
+      setProgress(0);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -66,17 +89,22 @@ export function FileUpload({ onUploadSuccess }: FileUploadProps) {
       <CardContent className="flex flex-col items-center justify-center py-10">
         <div className="mb-4 rounded-full bg-primary/10 p-4">
           {isUploading ? (
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="relative">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+              <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold">
+                {progress}%
+              </div>
+            </div>
           ) : (
             <Upload className="h-8 w-8 text-primary" />
           )}
         </div>
         <div className="text-center">
           <h3 className="text-lg font-semibold">
-            {isUploading ? "Processing VAT Returns..." : "Upload VAT Returns"}
+            {isUploading ? `${t.processing} (${progress}%)` : t.uploadReturns}
           </h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Upload up to 12 PDF or image files of your VAT return forms
+            {t.uploadNote}
           </p>
           <input
             type="file"
@@ -91,10 +119,22 @@ export function FileUpload({ onUploadSuccess }: FileUploadProps) {
             disabled={isUploading}
             variant="outline"
           >
-            {isUploading ? "Please wait..." : "Select Files"}
+            {isUploading ? t.pleaseWait : t.selectFiles}
           </Button>
+          
+          {isUploading && (
+            <div className="mt-4 w-64 h-2 bg-muted rounded-full overflow-hidden">
+              <motion.div 
+                className="h-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
   );
 }
+

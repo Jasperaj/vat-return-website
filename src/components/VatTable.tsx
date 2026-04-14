@@ -19,20 +19,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { translations, Language } from "@/lib/translations";
 
 interface VatTableProps {
   data: VatReturn[];
   onDelete: (id: string) => void;
+  lang: Language;
 }
 
-export function VatTable({ data, onDelete }: VatTableProps) {
+export function VatTable({ data, onDelete, lang }: VatTableProps) {
+  const t = translations[lang];
+
   if (data.length === 0) {
     return (
       <div className="text-center py-20 bg-muted/20 rounded-xl border-2 border-dashed">
         <div className="flex flex-col items-center gap-2">
           <FileText className="h-10 w-10 text-muted-foreground/50" />
-          <p className="text-muted-foreground font-medium">No VAT returns added yet.</p>
-          <p className="text-xs text-muted-foreground/70">Upload your first return to see the summary here.</p>
+          <p className="text-muted-foreground font-medium">{t.noReturns}</p>
+          <p className="text-xs text-muted-foreground/70">{t.noReturnsSubtitle}</p>
         </div>
       </div>
     );
@@ -44,12 +48,12 @@ export function VatTable({ data, onDelete }: VatTableProps) {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="w-[120px] font-bold text-foreground">Month</TableHead>
-              <TableHead className="font-bold text-foreground">Filename</TableHead>
-              <TableHead className="text-right font-bold text-foreground">Taxable Sales</TableHead>
-              <TableHead className="text-right font-bold text-foreground">VAT Collected</TableHead>
-              <TableHead className="text-right font-bold text-foreground">Net Payable</TableHead>
-              <TableHead className="text-right font-bold text-foreground">Actions</TableHead>
+              <TableHead className="w-[120px] font-bold text-foreground">{t.month}</TableHead>
+              <TableHead className="font-bold text-foreground">{t.filename}</TableHead>
+              <TableHead className="text-right font-bold text-foreground">{t.taxableSales}</TableHead>
+              <TableHead className="text-right font-bold text-foreground">{t.vatCollected}</TableHead>
+              <TableHead className="text-right font-bold text-foreground">{t.netVatPayable}</TableHead>
+              <TableHead className="text-right font-bold text-foreground">{t.actions}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -79,34 +83,34 @@ export function VatTable({ data, onDelete }: VatTableProps) {
                       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle className="flex items-center gap-2">
-                            VAT Return Details - {item.month}
+                            {t.details} - {item.month}
                           </DialogTitle>
                         </DialogHeader>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
                           <div className="space-y-4">
-                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">Sales Summary</h4>
-                            <DetailRow label="Taxable Sales" value={item.taxableSales} />
-                            <DetailRow label="Non-Taxable Sales" value={item.nonTaxableSales} />
-                            <DetailRow label="VAT on Sales" value={item.vatOnSales} isVat />
-                            <DetailRow label="Sales Invoices" value={item.numSalesInvoice} isCount />
-                            <DetailRow label="Credit Notes" value={item.numCreditNote} isCount />
+                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">{t.salesSummary}</h4>
+                            <DetailRow label={t.taxableSales} value={item.taxableSales} />
+                            <DetailRow label={t.nonTaxableSales} value={item.nonTaxableSales} />
+                            <DetailRow label={t.vatOnSales} value={item.vatOnSales} isVat />
+                            <DetailRow label={t.salesInvoices} value={item.numSalesInvoice} isCount />
+                            <DetailRow label={t.creditNotes} value={item.numCreditNote} isCount />
                           </div>
                           <div className="space-y-4">
-                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">Purchase & Import</h4>
-                            <DetailRow label="Taxable Purchase" value={item.taxablePurchase} />
-                            <DetailRow label="VAT on Purchase" value={item.vatOnTaxablePurchase} isVat />
-                            <DetailRow label="Taxable Import" value={item.taxableImport} />
-                            <DetailRow label="VAT on Import" value={item.vatOnTaxableImport} isVat />
-                            <DetailRow label="Exempt Purchase" value={item.exemptPurchase} />
-                            <DetailRow label="Exempt Import" value={item.exemptImport} />
-                            <DetailRow label="Purchase Invoices" value={item.numPurchaseInvoice} isCount />
+                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">{t.purchaseImport}</h4>
+                            <DetailRow label={t.taxablePurchase} value={item.taxablePurchase} />
+                            <DetailRow label={t.vatOnPurchase} value={item.vatOnTaxablePurchase} isVat />
+                            <DetailRow label={t.taxableImport} value={item.taxableImport} />
+                            <DetailRow label={t.vatOnImport} value={item.vatOnTaxableImport} isVat />
+                            <DetailRow label={t.exemptPurchase} value={item.exemptPurchase} />
+                            <DetailRow label={t.exemptImport} value={item.exemptImport} />
+                            <DetailRow label={t.purchaseInvoices} value={item.numPurchaseInvoice} isCount />
                           </div>
                           <div className="space-y-4 md:col-span-2">
-                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">Final Calculation</h4>
+                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">{t.finalCalculation}</h4>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                              <DetailRow label="Gross VAT Payable" value={item.grossVatPayable} />
-                              <DetailRow label="Prev Month Credit" value={item.previousMonthCredit} />
-                              <DetailRow label="Net VAT Payable" value={item.netVatPayable} highlight />
+                              <DetailRow label={t.grossVatPayable} value={item.grossVatPayable} />
+                              <DetailRow label={t.prevMonthCredit} value={item.previousMonthCredit} />
+                              <DetailRow label={t.netVatPayable} value={item.netVatPayable} highlight />
                             </div>
                           </div>
                         </div>
@@ -131,6 +135,7 @@ export function VatTable({ data, onDelete }: VatTableProps) {
     </div>
   );
 }
+
 
 function DetailRow({ label, value, isVat, isCount, highlight }: { label: string, value: number, isVat?: boolean, isCount?: boolean, highlight?: boolean }) {
   return (

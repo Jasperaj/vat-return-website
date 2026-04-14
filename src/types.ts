@@ -1,6 +1,8 @@
 export interface VatReturn {
   id: string;
   month: string;
+  companyName: string;
+  pan: string;
   filename: string;
   taxableSales: number;
   nonTaxableSales: number;

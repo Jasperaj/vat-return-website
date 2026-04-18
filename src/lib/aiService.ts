@@ -39,11 +39,13 @@ export const vatReturnSchema = {
     numPurchaseInvoice: { type: Type.NUMBER },
     numDebitNote: { type: Type.NUMBER },
     numCreditAdvice: { type: Type.NUMBER },
+    submissionNumber: { type: Type.STRING, description: "The Submission Number or D-01 number found at the top or in the header" },
+    verificationDate: { type: Type.STRING, description: "The date of verification/submission as stated in the document" },
   },
   required: ["isVatReturn", "month", "companyName", "pan", "taxableSales", "vatOnSales", "taxablePurchase", "vatOnTaxablePurchase", "netVatPayable"],
 };
 
-const PROMPT = "Analyze this document. First, determine if it is a VAT return form from Nepal (Internal Revenue Department). If it is, set isVatReturn to true and extract the details. Extract the company name exactly as it appears. Extract the PAN number. Extract the month and year in 'YYYY - MM' format. For salesReturn and purchaseReturn, extract the total monetary amounts of credit notes and debit notes respectively. Ensure taxableSales and taxablePurchase are extracted as the gross taxable amounts before these returns if possible, or as explicitly listed in the 'Taxable' columns. Map the fields correctly. If a field is missing, use 0. Return ONLY JSON.";
+const PROMPT = "Analyze this document. First, determine if it is a VAT return form from Nepal (Internal Revenue Department). If it is, set isVatReturn to true and extract the details. Extract the company name exactly as it appears. Extract the PAN number. Extract the month and year in 'YYYY - MM' format. Extract the Submission Number (often starts with D-01 or labeled as Submission No). Extract the Verification Date or Date of Submission. For salesReturn and purchaseReturn, extract the total monetary amounts of credit notes and debit notes respectively. Ensure taxableSales and taxablePurchase are extracted as the gross taxable amounts before these returns if possible, or as explicitly listed in the 'Taxable' columns. Map the fields correctly. If a field is missing, use 0 or empty string as appropriate. Return ONLY JSON.";
 
 export async function testConnection(provider: AIProvider, key: string, url?: string): Promise<boolean> {
   try {
@@ -67,8 +69,20 @@ export async function testConnection(provider: AIProvider, key: string, url?: st
       });
       return true;
     } else if (provider === "ollama") {
-      const response = await fetch(`${url}/api/tags`);
-      return response.ok;
+      try {
+        const response = await fetch(`${url}/api/tags`, { mode: 'cors' });
+        if (!response.ok) {
+          console.error(`Ollama returned status: ${response.status}`);
+          return false;
+        }
+        return true;
+      } catch (error) {
+        if (window.location.protocol === 'https:' && url?.startsWith('http:')) {
+          console.error("Mixed Content Error: Cannot connect to a local HTTP Ollama server from an HTTPS website. Please use an HTTPS tunnel (like ngrok) or ensure your browser allows local mixed content.");
+        }
+        console.error(`Connection test failed for ${provider}:`, error);
+        return false;
+      }
     }
     return false;
   } catch (error) {

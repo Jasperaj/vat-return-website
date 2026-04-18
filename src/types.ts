@@ -23,5 +23,7 @@ export interface VatReturn {
   numPurchaseInvoice: number;
   numDebitNote: number;
   numCreditAdvice: number;
+  submissionNumber?: string;
+  verificationDate?: string;
   dateAdded: string;
 }

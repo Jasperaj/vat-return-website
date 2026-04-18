@@ -128,15 +128,17 @@ export function VatTable({ data, onDelete, onRecheck, lang }: VatTableProps) {
                   </TableCell>
                   <TableCell className="text-center">
                     <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex justify-center cursor-help">
-                          {isMatch ? (
-                            <CheckCircle2 className="h-5 w-5 text-green-500" />
-                          ) : (
-                            <AlertTriangle className="h-5 w-5 text-amber-500" />
-                          )}
-                        </div>
-                      </TooltipTrigger>
+                      <TooltipTrigger 
+                        render={
+                          <div className="flex justify-center cursor-help">
+                            {isMatch ? (
+                              <CheckCircle2 className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <AlertTriangle className="h-5 w-5 text-amber-500" />
+                            )}
+                          </div>
+                        }
+                      />
                       <TooltipContent className="p-3 space-y-1 w-64">
                         <p className="font-bold text-xs border-b pb-1 mb-1">
                           {isMatch ? t.calculationMatch : t.calculationMismatch}
@@ -192,16 +194,18 @@ export function VatTable({ data, onDelete, onRecheck, lang }: VatTableProps) {
                   <div className="flex justify-end gap-1">
                     {!isMatch && (
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => onRecheck?.(item.id)}
-                            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
-                          >
-                            <RefreshCw className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
+                        <TooltipTrigger 
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => onRecheck?.(item.id)}
+                              className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
                         <TooltipContent>
                           <p>{t.recheckWithPro}</p>
                         </TooltipContent>
@@ -218,6 +222,19 @@ export function VatTable({ data, onDelete, onRecheck, lang }: VatTableProps) {
                           </DialogTitle>
                         </DialogHeader>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+                          <div className="space-y-4 md:col-span-2">
+                            <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">{t.title} Information</h4>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
+                                <span className="text-xs text-muted-foreground">{t.submissionNumber}</span>
+                                <span className="text-sm font-mono font-bold">{item.submissionNumber || "N/A"}</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
+                                <span className="text-xs text-muted-foreground">{t.verificationDate}</span>
+                                <span className="text-sm font-mono font-bold">{item.verificationDate || "N/A"}</span>
+                              </div>
+                            </div>
+                          </div>
                           <div className="space-y-4">
                             <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-b pb-1">{t.salesSummary}</h4>
                             <DetailRow label={t.taxableSales} value={item.taxableSales} />

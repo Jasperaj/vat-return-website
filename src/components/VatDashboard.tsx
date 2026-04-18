@@ -113,7 +113,15 @@ export default function VatDashboard() {
     
     setTestStatus(prev => ({ ...prev, [provider]: working ? "success" : "failed" }));
     if (working) toast.success(`${provider}: ${t.testSuccess}`);
-    else toast.error(`${provider}: ${t.testFailed}`);
+    else {
+      if (provider === "ollama") {
+        toast.error(`${provider}: ${t.testFailed}`, {
+          description: t.ollamaHint
+        });
+      } else {
+        toast.error(`${provider}: ${t.testFailed}`);
+      }
+    }
   };
 
   const handleAddReturn = (newReturns: VatReturn[]) => {

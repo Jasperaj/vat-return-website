@@ -46,7 +46,7 @@ export async function exportToExcel(returns: VatReturn[]) {
       "Taxable Purchase", "VAT on Taxable Import", "VAT on Taxable Purchase",
       "Exempt Purchase", "Exempt Import", "Gross VAT Payable", "Previous Month Credit",
       "Net VAT Payable", "Sales Invoices", "Credit Notes", "Purchase Invoices",
-      "Debit Notes", "Credit Advice", "Filename"
+      "Debit Notes", "Credit Advice", "Filename", "Submission Number", "Verification Date"
     ];
 
     const headerRow = worksheet.getRow(currentRow);
@@ -80,7 +80,7 @@ export async function exportToExcel(returns: VatReturn[]) {
         r.taxablePurchase, r.vatOnTaxableImport, r.vatOnTaxablePurchase,
         r.exemptPurchase, r.exemptImport, r.grossVatPayable, r.previousMonthCredit,
         r.netVatPayable, r.numSalesInvoice, r.numCreditNote, r.numPurchaseInvoice,
-        r.numDebitNote, r.numCreditAdvice, r.filename
+        r.numDebitNote, r.numCreditAdvice, r.filename, r.submissionNumber || "", r.verificationDate || ""
       ];
 
       values.forEach((v, i) => {
@@ -134,7 +134,7 @@ export async function exportToExcel(returns: VatReturn[]) {
     });
 
     // Add borders to the columns we didn't sum in the total row
-    [12, 13, 19].forEach(colIdx => {
+    [12, 13, 19, 20, 21].forEach(colIdx => {
       const cell = totalRow.getCell(colIdx);
       cell.border = {
         top: { style: 'thin' },
@@ -152,6 +152,7 @@ export async function exportToExcel(returns: VatReturn[]) {
     const idx = i + 1;
     if (idx === 1) column.width = 12; // Month
     else if (idx === 19) column.width = 45; // Filename
+    else if (idx === 20 || idx === 21) column.width = 25; // Submission/Verification
     else column.width = 18; // Numeric columns
   });
 

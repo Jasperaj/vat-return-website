@@ -1,5 +1,5 @@
 {
-  "name": "VAT Return Tracker",
+  "name": "VAT Return Summary",
   "description": "Track and summarize VAT returns with automated data extraction and CSV export.",
   "requestFramePermissions": []
 }

@@ -7,8 +7,10 @@ export interface VatReturn {
   taxableSales: number;
   nonTaxableSales: number;
   vatOnSales: number;
+  salesReturn: number;
   taxableImport: number;
   taxablePurchase: number;
+  purchaseReturn: number;
   vatOnTaxableImport: number;
   vatOnTaxablePurchase: number;
   exemptPurchase: number;

@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Upload, FileText, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { parseVatReturn } from "@/lib/gemini";
+import { parseVatReturn, AIConfig } from "@/lib/aiService";
 import { VatReturn } from "@/types";
 import { toast } from "sonner";
 import { translations, Language } from "@/lib/translations";
@@ -50,7 +50,10 @@ export function FileUpload({ onUploadSuccess, lang }: FileUploadProps) {
             reader.readAsDataURL(file);
           });
 
-          const parsedData = await parseVatReturn(base64Data, file.type);
+          const savedConfig = localStorage.getItem("vat_ai_config");
+          const config: AIConfig = savedConfig ? JSON.parse(savedConfig) : { activeProvider: "gemini" };
+          
+          const parsedData = await parseVatReturn(base64Data, file.type, config);
           
           processedReturns.push({
             ...parsedData,
